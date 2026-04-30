@@ -1,5 +1,6 @@
 export * from "./theme";
 export * from "./components/text";
+export * from "./components/button";
 export * from "./tokens/colors";
 export * from "./tokens/radius";
 export * from "./tokens/shadows";
