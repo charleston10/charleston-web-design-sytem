@@ -25,12 +25,14 @@ export function AccordionTrigger<T extends React.ElementType = "button">({
             id={triggerId}
             {...(Component === "button" ? { type: "button" } : null)}
             disabled={disabled}
+            aria-disabled={disabled}
             aria-expanded={isOpen}
             aria-controls={contentId}
+            data-state={isOpen ? "open" : "closed"}
             onClick={(event: React.MouseEvent<Element>) => {
                 onClick?.(event);
 
-                if (event.defaultPrevented) {
+                if (event.defaultPrevented || disabled) {
                     return;
                 }
 
