@@ -15,18 +15,27 @@ export function AccordionTrigger<T extends React.ElementType = "button">({
     const Component = (as ?? "button") as React.ElementType;
     const { value, contentId, triggerId, disabled } = useAccordionItemContext();
     const { isItemOpen, toggleItem } = useAccordionRootContext();
+    const { onClick, ...restProps } = props;
 
     const isOpen = isItemOpen(value);
 
     return (
         <Component
-            {...props}
+            {...restProps}
             id={triggerId}
-            type="button"
+            {...(Component === "button" ? { type: "button" } : null)}
             disabled={disabled}
             aria-expanded={isOpen}
             aria-controls={contentId}
-            onClick={() => toggleItem(value)}
+            onClick={(event: React.MouseEvent<Element>) => {
+                onClick?.(event);
+
+                if (event.defaultPrevented) {
+                    return;
+                }
+
+                toggleItem(value);
+            }}
             style={{
                 width: "100%",
                 display: "flex",
