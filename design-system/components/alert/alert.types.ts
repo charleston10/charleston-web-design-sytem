@@ -21,4 +21,10 @@ export type AlertDescriptionProps<T extends React.ElementType = "p"> = {
     style?: React.CSSProperties;
 } & Omit<React.ComponentPropsWithoutRef<T>, "as" | "children" | "style">;
 
+export type AlertContentProps<T extends React.ElementType = "div"> = {
+    as?: T;
+    children?: React.ReactNode;
+    style?: React.CSSProperties;
+} & Omit<React.ComponentPropsWithoutRef<T>, "as" | "children" | "style">;
+
 export type { AlertVariant };
