@@ -4,34 +4,25 @@ import { useTheme } from "../../theme";
 
 import type { TextProps, TextVariant } from "./text.types";
 
-const variantStyleMap: Record<TextVariant, { fontSize: number; lineHeight: number }> = {
-    "title-lg": { fontSize: 26, lineHeight: 32 },
-    "title-md": { fontSize: 22, lineHeight: 26 },
-    "title-sm": { fontSize: 18, lineHeight: 22 },
-    "subtitle-md": { fontSize: 18, lineHeight: 22 },
-    "subtitle-sm": { fontSize: 16, lineHeight: 20 },
-    "body-lg": { fontSize: 20, lineHeight: 26 },
-    "body-md": { fontSize: 18, lineHeight: 24 },
-    "body-sm": { fontSize: 16, lineHeight: 22 },
-    "label-md": { fontSize: 16, lineHeight: 20 },
-    "label-sm": { fontSize: 14, lineHeight: 18 },
-    "caption-sm": { fontSize: 14, lineHeight: 18 },
-    small: { fontSize: 12, lineHeight: 16 },
-};
+type VariantStyle = { fontSize: number; lineHeight: number };
 
-function getVariantStyle(theme: ReturnType<typeof useTheme>, variant: TextVariant) {
-    if (variant === "small") {
-        return theme.typography.small;
-    }
+function getVariantStyle(theme: ReturnType<typeof useTheme>, variant: TextVariant): VariantStyle {
+    const variantMap: Record<TextVariant, VariantStyle> = {
+        "title-lg": theme.typography.title.lg,
+        "title-md": theme.typography.title.md,
+        "title-sm": theme.typography.title.sm,
+        "subtitle-md": theme.typography.subtitle.md,
+        "subtitle-sm": theme.typography.subtitle.sm,
+        "body-lg": theme.typography.body.lg,
+        "body-md": theme.typography.body.md,
+        "body-sm": theme.typography.body.sm,
+        "label-md": theme.typography.label.md,
+        "label-sm": theme.typography.label.sm,
+        "caption-sm": theme.typography.caption.sm,
+        small: theme.typography.small,
+    };
 
-    const [group, size] = variant.split("-") as [Exclude<TextVariant, "small"> extends `${infer G}-${infer S}` ? G : never, string];
-
-    if (group === "title" || group === "subtitle" || group === "body" || group === "label" || group === "caption") {
-        const scopedTheme = theme.typography[group] as Record<string, { fontSize: number; lineHeight: number }>;
-        return scopedTheme[size] ?? variantStyleMap[variant];
-    }
-
-    return variantStyleMap[variant];
+    return variantMap[variant];
 }
 
 export function TextRoot<T extends React.ElementType = "p">({
