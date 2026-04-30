@@ -1,5 +1,6 @@
 export * from "./theme";
 export * from "./components/avatar";
+export * from "./components/accordion";
 export * from "./components/text";
 export * from "./components/button";
 export * from "./tokens/colors";
