@@ -24,6 +24,7 @@ export function AccordionItem<T extends React.ElementType = "div">({
         <AccordionItemContext.Provider value={{ value, triggerId, contentId, disabled }}>
             <Component
                 {...props}
+                data-disabled={disabled ? "" : undefined}
                 style={{
                     borderBottom: `1px solid ${theme.colors.border.default}`,
                     ...style,

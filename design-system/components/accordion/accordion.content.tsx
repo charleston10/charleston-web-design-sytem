@@ -24,6 +24,7 @@ export function AccordionContent<T extends React.ElementType = "div">({
             id={contentId}
             role="region"
             aria-labelledby={triggerId}
+            data-state={isOpen ? "open" : "closed"}
             hidden={!isOpen}
             style={{
                 paddingInline: theme.spacing.md,

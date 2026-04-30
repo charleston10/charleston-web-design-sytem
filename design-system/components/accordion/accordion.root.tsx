@@ -34,6 +34,14 @@ export function AccordionRoot<T extends React.ElementType = "div">({
     const [internalValue, setInternalValue] = React.useState<string[]>(() => normalizeValue(type, defaultValue));
     const openValues = isControlled ? normalizeValue(type, value) : internalValue;
 
+    React.useEffect(() => {
+        if (isControlled) {
+            return;
+        }
+
+        setInternalValue((currentValues) => normalizeValue(type, currentValues));
+    }, [isControlled, type]);
+
     function emitNext(nextValues: string[]) {
         if (!isControlled) {
             setInternalValue(nextValues);
@@ -64,6 +72,7 @@ export function AccordionRoot<T extends React.ElementType = "div">({
         <AccordionRootContext.Provider value={{ type, isItemOpen, toggleItem }}>
             <Component
                 {...props}
+                data-orientation="vertical"
                 style={{
                     border: `1px solid ${theme.colors.border.default}`,
                     borderRadius: theme.radius.md,
