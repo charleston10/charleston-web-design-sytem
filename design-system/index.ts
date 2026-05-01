@@ -15,4 +15,3 @@ export * from "./tokens/spacing";
 export * from "./tokens/typography";
 export * from "./tokens/z-index";
 
-export * from "./components/tooltip";
