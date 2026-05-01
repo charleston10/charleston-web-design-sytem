@@ -1,11 +1,16 @@
 import * as React from "react";
 
 import { useTheme } from "../../theme";
-
 import { useDialogContext } from "./dialog.context";
+
 import type { DialogDescriptionProps } from "./dialog.types";
 
-export function DialogDescription<T extends React.ElementType = "p">({ as, children, style, ...props }: DialogDescriptionProps<T>) {
+export function DialogDescription<T extends React.ElementType = "p">({
+    as,
+    children,
+    style,
+    ...props
+}: DialogDescriptionProps<T>) {
     const theme = useTheme();
     const { descriptionId, setHasDescription } = useDialogContext();
     const Component = (as ?? "p") as React.ElementType;

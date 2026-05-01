@@ -1,8 +1,8 @@
 import * as React from "react";
 
 import { useTheme } from "../../theme";
-
 import { useDialogContext } from "./dialog.context";
+
 import type { DialogContentProps } from "./dialog.types";
 
 function getFocusableElements(container: HTMLElement) {
@@ -21,7 +21,16 @@ export function DialogContent<T extends React.ElementType = "div">({
     ...props
 }: DialogContentProps<T>) {
     const theme = useTheme();
-    const { open, setOpen, contentRef, contentId, titleId, descriptionId, hasTitle, hasDescription } = useDialogContext();
+    const {
+        open,
+        setOpen,
+        contentRef,
+        contentId,
+        titleId,
+        descriptionId,
+        hasTitle,
+        hasDescription,
+    } = useDialogContext();
     const Component = (as ?? "div") as React.ElementType;
 
     function handleKeyDown(event: React.KeyboardEvent<Element>) {
@@ -52,6 +61,13 @@ export function DialogContent<T extends React.ElementType = "div">({
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
         const activeElement = document.activeElement as HTMLElement | null;
+        const isFocusInsideDialog = !!(activeElement && contentRef.current.contains(activeElement));
+
+        if (!isFocusInsideDialog) {
+            event.preventDefault();
+            (event.shiftKey ? lastElement : firstElement).focus();
+            return;
+        }
 
         if (event.shiftKey && activeElement === firstElement) {
             event.preventDefault();
