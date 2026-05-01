@@ -10,6 +10,7 @@ export * from "./components/badge";
 export * from "./components/avatar";
 export * from "./components/tabs";
 export * from "./components/tooltip";
+export * from "./components/toolbar";
 export * from "./components/toast";
 export * from "./components/skeleton";
 export * from "./components/stack";
