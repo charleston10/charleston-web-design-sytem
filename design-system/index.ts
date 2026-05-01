@@ -1,6 +1,7 @@
 export * from "./theme";
 export * from "./components/avatar";
 export * from "./components/alert";
+export * from "./components/accordion";
 export * from "./components/text";
 export * from "./components/button";
 export * from "./components/badge";
