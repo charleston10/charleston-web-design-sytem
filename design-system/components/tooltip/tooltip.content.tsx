@@ -44,12 +44,12 @@ function getTooltipTransform(side: TooltipSide): string {
 
 export function TooltipContent({ children, side, offset = 8, style, ...props }: TooltipContentProps) {
     const theme = useTheme();
-    const { contentId, isOpen, triggerRef, side: rootSide } = useTooltipContext();
+    const { contentId, open, triggerRef, side: rootSide } = useTooltipContext();
     const [position, setPosition] = React.useState<TooltipPosition | null>(null);
     const resolvedSide = side ?? rootSide;
 
     React.useEffect(() => {
-        if (!isOpen || !triggerRef.current) {
+        if (!open || !triggerRef.current) {
             return;
         }
 
@@ -70,9 +70,9 @@ export function TooltipContent({ children, side, offset = 8, style, ...props }: 
             window.removeEventListener("resize", updatePosition);
             window.removeEventListener("scroll", updatePosition, true);
         };
-    }, [isOpen, offset, resolvedSide, triggerRef]);
+    }, [open, offset, resolvedSide, triggerRef]);
 
-    if (!isOpen || !position) {
+    if (!open || !position) {
         return null;
     }
 

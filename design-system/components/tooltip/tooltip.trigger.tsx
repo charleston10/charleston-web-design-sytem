@@ -16,7 +16,7 @@ export function TooltipTrigger<T extends React.ElementType = "button">({
 }: TooltipTriggerProps<T>) {
     const Component = (as ?? "button") as React.ElementType;
 
-    const { contentId, open, setOpen, openDelay, closeDelay } = useTooltipContext();
+    const { contentId, open, setOpen, openDelay, closeDelay, triggerRef } = useTooltipContext();
 
     const timerRef = React.useRef<number | null>(null);
 
@@ -72,6 +72,7 @@ export function TooltipTrigger<T extends React.ElementType = "button">({
     return (
         <Component
             {...props}
+            ref={triggerRef}
             aria-describedby={open ? contentId : undefined}
             onMouseEnter={(event: React.MouseEvent) => {
                 onMouseEnter?.(event as never);
