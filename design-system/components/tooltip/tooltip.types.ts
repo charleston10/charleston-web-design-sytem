@@ -9,6 +9,7 @@ export type TooltipRootProps = {
     onOpenChange?: (open: boolean) => void;
     openDelay?: number;
     closeDelay?: number;
+    side?: TooltipSide;
 };
 
 export type TooltipTriggerProps<T extends React.ElementType = "button"> = {

@@ -10,8 +10,10 @@ export function TooltipRoot({
     onOpenChange,
     openDelay = 120,
     closeDelay = 80,
+    side = "top",
 }: TooltipRootProps) {
     const contentId = React.useId();
+    const triggerRef = React.useRef<HTMLElement | null>(null);
     const isControlled = typeof open !== "undefined";
     const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
 
@@ -33,6 +35,8 @@ export function TooltipRoot({
                 setOpen,
                 openDelay,
                 closeDelay,
+                side,
+                triggerRef,
             }}
         >
             {children}
