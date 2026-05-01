@@ -66,3 +66,19 @@ Comportamento:
 - Associação de rótulo/descrição via `aria-labelledby` e `aria-describedby` apenas quando os elementos correspondentes existem.
 - `Dialog.Trigger` expõe `aria-haspopup="dialog"`, `aria-expanded`, `aria-controls` e `data-state="open|closed"`.
 - Fechamento por `Escape` e suporte a navegação por teclado (`Tab`, `Shift+Tab`, `Enter`, `Space`).
+
+## Verificação Recomendada
+
+### Teclado
+
+1. Abrir via `Enter`/`Space` no `Dialog.Trigger`.
+2. Validar `Escape` fecha o diálogo.
+3. Validar ciclo de foco com `Tab` e `Shift+Tab` dentro do `Dialog.Content`.
+4. Validar retorno de foco ao `Dialog.Trigger` após fechar.
+
+### Leitor de Tela
+
+1. Com `Dialog.Title`: validar anúncio do nome via `aria-labelledby`.
+2. Sem `Dialog.Title`: validar ausência de referência quebrada em `aria-labelledby`.
+3. Com `Dialog.Description`: validar anúncio de descrição via `aria-describedby`.
+4. Sem `Dialog.Description`: validar ausência de referência quebrada em `aria-describedby`.
