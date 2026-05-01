@@ -1,19 +1,19 @@
 import * as React from "react";
 
-import type { Theme } from "../../theme";
+export type AvatarSize = "xs" | "sm" | "md" | "lg" | "xl";
+export type AvatarShape = "circle" | "rounded" | "square";
 
-type AvatarSize = "sm" | "md" | "lg" | "xl";
-type AvatarRadius = keyof Theme["radius"];
-
-export type AvatarProps = {
-    alt?: string;
-    src?: string;
-    name?: string;
+export type AvatarRootProps = {
     size?: AvatarSize;
-    radius?: AvatarRadius;
+    shape?: AvatarShape;
+    children?: React.ReactNode;
+    style?: React.CSSProperties;
+} & Omit<React.HTMLAttributes<HTMLDivElement>, "style">;
+
+export type AvatarContentProps = {
+    src?: string;
+    alt?: string;
+    name?: string;
     fallback?: React.ReactNode;
     style?: React.CSSProperties;
-    imageStyle?: React.CSSProperties;
-} & Omit<React.ComponentPropsWithoutRef<"span">, "children" | "style">;
-
-export type { AvatarRadius, AvatarSize };
+} & Omit<React.ImgHTMLAttributes<HTMLImageElement>, "src" | "alt" | "style">;
