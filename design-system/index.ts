@@ -8,10 +8,10 @@ export * from "./components/action-sheet";
 export * from "./components/badge";
 export * from "./components/avatar";
 export * from "./components/tooltip";
+export * from "./components/toolbar";
 export * from "./tokens/colors";
 export * from "./tokens/radius";
 export * from "./tokens/shadows";
 export * from "./tokens/spacing";
 export * from "./tokens/typography";
 export * from "./tokens/z-index";
-
