@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { DialogContext } from "./dialog.context";
+
 import type { DialogRootProps } from "./dialog.types";
 
 export function DialogRoot<T extends React.ElementType = "div">({
@@ -18,6 +19,8 @@ export function DialogRoot<T extends React.ElementType = "div">({
     const descriptionId = React.useId();
     const triggerRef = React.useRef<HTMLElement | null>(null);
     const contentRef = React.useRef<HTMLElement | null>(null);
+    const previousFocusedElementRef = React.useRef<HTMLElement | null>(null);
+    const previousOpenRef = React.useRef<boolean>(false);
     const [hasTitle, setHasTitle] = React.useState(false);
     const [hasDescription, setHasDescription] = React.useState(false);
 
@@ -37,17 +40,74 @@ export function DialogRoot<T extends React.ElementType = "div">({
     );
 
     React.useEffect(() => {
-        if (resolvedOpen) {
-            const activeElement = document.activeElement as HTMLElement | null;
-
-            if (activeElement && contentRef.current && !contentRef.current.contains(activeElement)) {
-                contentRef.current.focus();
-            }
-
+        if (typeof document === "undefined") {
             return;
         }
 
-        triggerRef.current?.focus();
+        const wasOpen = previousOpenRef.current;
+
+        if (resolvedOpen && !wasOpen) {
+            previousFocusedElementRef.current = document.activeElement as HTMLElement | null;
+            const activeElement = document.activeElement as HTMLElement | null;
+
+            if (
+                activeElement &&
+                contentRef.current &&
+                !contentRef.current.contains(activeElement)
+            ) {
+                contentRef.current.focus();
+            }
+        }
+
+        if (!resolvedOpen && wasOpen) {
+            const previousFocusedElement = previousFocusedElementRef.current;
+
+            if (
+                previousFocusedElement &&
+                previousFocusedElement.isConnected &&
+                !previousFocusedElement.hasAttribute("disabled")
+            ) {
+                previousFocusedElement.focus();
+            } else {
+                triggerRef.current?.focus();
+            }
+        }
+
+        previousOpenRef.current = resolvedOpen;
+    }, [resolvedOpen]);
+
+    React.useEffect(() => {
+        if (typeof document === "undefined" || !resolvedOpen) {
+            return;
+        }
+
+        const lockCountAttribute = "data-dialog-scroll-lock-count";
+        const body = document.body;
+        const currentCount = Number(body.getAttribute(lockCountAttribute) ?? "0");
+
+        if (currentCount === 0) {
+            body.setAttribute("data-dialog-scroll-lock-original-overflow", body.style.overflow);
+            body.style.overflow = "hidden";
+        }
+
+        body.setAttribute(lockCountAttribute, String(currentCount + 1));
+
+        return () => {
+            const activeCount = Number(body.getAttribute(lockCountAttribute) ?? "0");
+            const nextCount = Math.max(0, activeCount - 1);
+
+            if (nextCount === 0) {
+                const originalOverflow = body.getAttribute(
+                    "data-dialog-scroll-lock-original-overflow",
+                );
+                body.style.overflow = originalOverflow ?? "";
+                body.removeAttribute(lockCountAttribute);
+                body.removeAttribute("data-dialog-scroll-lock-original-overflow");
+                return;
+            }
+
+            body.setAttribute(lockCountAttribute, String(nextCount));
+        };
     }, [resolvedOpen]);
 
     const contextValue = React.useMemo(
@@ -65,12 +125,23 @@ export function DialogRoot<T extends React.ElementType = "div">({
             setHasTitle,
             setHasDescription,
         }),
-        [closeOnOverlayClick, contentId, descriptionId, hasDescription, hasTitle, resolvedOpen, setOpen, titleId],
+        [
+            closeOnOverlayClick,
+            contentId,
+            descriptionId,
+            hasDescription,
+            hasTitle,
+            resolvedOpen,
+            setOpen,
+            titleId,
+        ],
     );
 
     return (
         <DialogContext.Provider value={contextValue}>
-            <Component {...props}>{children}</Component>
+            <Component data-dialog-root="" {...props}>
+                {children}
+            </Component>
         </DialogContext.Provider>
     );
 }

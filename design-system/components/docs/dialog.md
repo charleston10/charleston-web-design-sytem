@@ -28,7 +28,8 @@ Props principais:
 Comportamento:
 
 - Suporta modo controlado e não controlado.
-- Restaura o foco para o `Trigger` ao fechar.
+- Captura o elemento focado antes da abertura e restaura esse foco ao fechar (com fallback para o `Trigger`).
+- Aplica lock de scroll de background enquanto o modal está aberto.
 
 ### `Dialog.Content`
 
@@ -65,4 +66,4 @@ Comportamento:
 - Semântica de modal via `role="dialog"` e `aria-modal`.
 - Associação de rótulo/descrição via `aria-labelledby` e `aria-describedby` apenas quando os elementos correspondentes existem.
 - `Dialog.Trigger` expõe `aria-haspopup="dialog"`, `aria-expanded`, `aria-controls` e `data-state="open|closed"`.
-- Fechamento por `Escape` e suporte a navegação por teclado (`Tab`, `Shift+Tab`, `Enter`, `Space`).
+- Fechamento por `Escape` e suporte a navegação por teclado (`Tab`, `Shift+Tab`, `Enter`, `Space`) com recaptura de foco no ciclo do diálogo.
