@@ -85,16 +85,31 @@ export function ButtonRoot<T extends React.ElementType = "button">({
 }: ButtonProps<T>) {
     const theme = useTheme();
     const Component = (as ?? "button") as React.ElementType;
+    const isNativeButton = Component === "button";
 
     const isDisabled = disabled || loading;
     const sizeStyle = sizeMap[size];
     const buttonStyle = getButtonStyles(variant, isDisabled, theme);
 
+    function handleClick(event: React.MouseEvent<Element>) {
+        if (isDisabled) {
+            event.preventDefault();
+            event.stopPropagation();
+            return;
+        }
+
+        if (typeof props.onClick === "function") {
+            props.onClick(event as React.MouseEvent<any>);
+        }
+    }
+
     return (
         <Component
             {...props}
-            disabled={isDisabled}
+            disabled={isNativeButton ? isDisabled : undefined}
             aria-disabled={isDisabled}
+            aria-busy={loading}
+            onClick={handleClick}
             style={{
                 appearance: "none",
                 borderStyle: "solid",
@@ -116,12 +131,13 @@ export function ButtonRoot<T extends React.ElementType = "button">({
                 justifyContent: "center",
                 gap: theme.spacing.xs,
                 cursor: isDisabled ? "not-allowed" : "pointer",
+                pointerEvents: isDisabled ? "none" : undefined,
                 opacity: isDisabled ? theme.opacity.disabled : 1,
                 transition: `all ${theme.motion.fast}ms ${theme.motion.easing.standard}`,
                 ...style,
             }}
         >
-            {loading ? "Loading..." : children}
+            {loading ? "Carregando..." : children}
         </Component>
     );
 }
