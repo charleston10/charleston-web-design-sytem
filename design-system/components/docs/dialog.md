@@ -1,68 +1,68 @@
-# Dialog (Web Construction Guide)
+# Dialog
 
-Este documento descreve as especificações técnicas e diretrizes de arquitetura para a construção do componente `Dialog` para a plataforma Web, seguindo os padrões de excelência do Charleston Design System.
+Componente para janelas modais com foco em acessibilidade WAI-ARIA, navegação por teclado e composição.
 
-## 🎯 Objetivo
+## Estrutura (Compound Components)
 
-Janelas modais de diálogo. Na Web, deve ser otimizado para performance, acessibilidade (WAI-ARIA) e consistência visual, utilizando o padrão de **Compound Components**.
+- `Dialog.Root`: controla estado aberto/fechado (controlado ou não controlado).
+- `Dialog.Trigger`: elemento que abre o modal.
+- `Dialog.Overlay`: camada de fundo com fechamento opcional por clique.
+- `Dialog.Content`: conteúdo modal com `role="dialog"`, `aria-modal` e trap de foco.
+- `Dialog.Header`: agrupamento de título/descrição.
+- `Dialog.Footer`: agrupamento de ações.
+- `Dialog.Title`: título semântico associado ao `Dialog.Content`.
+- `Dialog.Description`: descrição semântica associada ao `Dialog.Content`.
+- `Dialog.Close`: elemento para fechamento explícito.
 
-## 🏗️ Anatomia e Composição
+## API
 
-A estrutura deve permitir controle total sobre a renderização:
+### `Dialog.Root`
 
-1.  **Dialog.Root**: Container principal que gerencia o estado e contexto.
-2.  **Dialog.Content**: Onde o conteúdo principal é renderizado.
+Props principais:
 
-### Exemplo de Uso Desejado:
+- `open?: boolean`
+- `defaultOpen?: boolean` (default: `false`)
+- `onOpenChange?: (open: boolean) => void`
+- `closeOnOverlayClick?: boolean` (default: `true`)
+
+Comportamento:
+
+- Suporta modo controlado e não controlado.
+- Restaura o foco para o `Trigger` ao fechar.
+
+### `Dialog.Content`
+
+Comportamento:
+
+- Renderiza apenas quando aberto.
+- Usa `role="dialog"` e `aria-modal`.
+- Aplica `aria-labelledby` somente quando `Dialog.Title` está presente.
+- Aplica `aria-describedby` somente quando `Dialog.Description` está presente.
+- Fecha com `Escape`.
+- Mantém foco no conteúdo com navegação cíclica em `Tab`/`Shift+Tab`.
+
+## Exemplo
+
 ```tsx
-<Dialog>
-  <Dialog.Content>
-    {/* Conteúdo do componente */}
-  </Dialog.Content>
-</Dialog>
+<Dialog.Root>
+    <Dialog.Trigger>Abrir diálogo</Dialog.Trigger>
+    <Dialog.Overlay />
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>Excluir item</Dialog.Title>
+            <Dialog.Description>Essa ação não poderá ser desfeita.</Dialog.Description>
+        </Dialog.Header>
+        <Dialog.Footer>
+            <Dialog.Close>Cancelar</Dialog.Close>
+            <button type="button">Confirmar</button>
+        </Dialog.Footer>
+    </Dialog.Content>
+</Dialog.Root>
 ```
 
-## 🎨 Design Tokens
+## Acessibilidade
 
--   **Background:** `theme.colors.surface.default` ou conforme o estado.
--   **Bordas:** `theme.colors.border.default` para divisores ou contornos.
--   **Espaçamento:** Uso de tokens `theme.spacing` para paddings e gaps.
--   **Tipografia:** Uso de tokens `theme.typography` para garantir consistência.
-
-## ⚙️ Especificações Técnicas
-
-### Propriedades (Dialog.Root)
-
-| Prop            | Tipo                     | Padrão     | Descrição                                  |
-| --------------- | ------------------------ | ---------- | ------------------------------------------ |
-| `children`      | `ReactNode`              | -          | Conteúdo do componente.                    |
-| `className`     | `string`                 | -          | Classes CSS adicionais.                    |
-
-### Acessibilidade (WAI-ARIA)
-
--   **Semântica:** Utilizar elementos HTML5 nativos sempre que possível.
--   **Keyboard:** Garantir que todos os elementos interativos sejam acessíveis via `Tab`, `Enter` e `Space`.
--   **Roles:** Aplicar `role` apropriado conforme a especificação W3C/WAI-ARIA para Dialog.
-
-## 📂 Estrutura de Arquivos Recomendada
-
-```
-dialog/
-├── dialog.root.tsx
-├── dialog.content.tsx
-├── dialog.context.ts
-├── dialog.types.ts
-├── dialog.styles.ts
-└── README.md
-```
-
-## 🧪 Estratégia de Testes
-
-1.  **Renderização:** Garantir que o componente e seus sub-componentes montem sem erros.
-2.  **Acessibilidade:** Validar atributos ARIA e navegação via teclado.
-3.  **Propriedades:** Verificar se as props customizadas alteram o comportamento/estilo conforme esperado.
-
----
-
-> [!IMPORTANT]
-> **Docs as Code:** Mantenha este documento atualizado em relação à implementação real. Qualquer mudança na API do componente deve refletir aqui.
+- Semântica de modal via `role="dialog"` e `aria-modal`.
+- Associação de rótulo/descrição via `aria-labelledby` e `aria-describedby` apenas quando os elementos correspondentes existem.
+- `Dialog.Trigger` expõe `aria-haspopup="dialog"`, `aria-expanded`, `aria-controls` e `data-state="open|closed"`.
+- Fechamento por `Escape` e suporte a navegação por teclado (`Tab`, `Shift+Tab`, `Enter`, `Space`).
