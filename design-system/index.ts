@@ -3,6 +3,7 @@ export * from "./components/avatar";
 export * from "./components/text";
 export * from "./components/button";
 export * from "./components/badge";
+export * from "./components/tooltip";
 export * from "./tokens/colors";
 export * from "./tokens/radius";
 export * from "./tokens/shadows";
